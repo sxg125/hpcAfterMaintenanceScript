@@ -37,10 +37,7 @@ sh /etc/admin/cronjob-maintenance/job-complete-failure.sh
 # Check Non Responsive Nodes
 #sh /etc/admin/cronjob-maintenance/slurmstepdIssue.sh
 
-# Email the status
-#mail -s "Check HPC Maintenance Status" sxg125@case.edu < $MSG
-
-# Submit MPI job
+# Uncomment the lines below to Submit MPI job
 #echo "Submitting MPI Job now ...."
 #ssh  hpc1x "srun -N 4 -n 16 /home/sxg125/Software/mpi/my_program"
 
