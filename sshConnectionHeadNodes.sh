@@ -1,24 +1,19 @@
-#!/bin/bash
+filename="/tmp/conn.lst"
+nodelist="/tmp/headnode.lst"
+# Check Connection status for Head Nodes
+#echo "1G Connection issue is  on following head nodes ..."
 
-# Created by Sanjaya Gajurel on May 22, 2017
+#We are using PDSH/PDCP for which the nodes can be lised as a group at /etc/dsh/group
+cat /etc/dsh/group/<file-with-node-list> > $nodelist
 
-# Check the status of the head nodes
+  for i in `cat $nodelist`
+   do
+      ssh -q $i hostname  | awk -F'.' '{print $1}' | wc -l | grep 0  > $filename 2> /tmp/errfile
 
-# Head login nodes
-declare LOGIN=<server>
-declare VIZ=<server>
-declare X=<server>
 
-# Head Master
-declare MASTER=<master-node>
-declare MGMT=<mgmt-node>
-# declare MGMT2=<mgm-node> : This code will run from here
-declare XDMOD=<xdmod-server>
-
-declare -a headnodes=("$LOGIN" "$VIZ" "$X" "$MASTER" "$MGMT" "$XDMOD")
-
-echo "Check ssh status of Head Nodes:${headnodes[@]}"
-echo "These nodes have ssh connections ..."
-for node in "${headnodes[@]}"
-do
-  ssh -q $node hostname  | awk -F'.' '{print $1}'
+  if [ -s $filename ]
+       then
+           echo "1G Connection issue is  on following head node(s):$i ..." >> $MSG
+           mail -s "1G Connection Issue detected in head node" <email-address> < $MSG
+   fi
+  done
